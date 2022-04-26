@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     "env": {
         "browser": true,
         "es2021": true
@@ -22,6 +22,14 @@ module.exports = {
     "rules": {
         "vue/component-tags-order": ["error", {
             "order": ["style", "template" ,"script"],
-        }]
+        }],
+        "vue/html-self-closing": ["error", {
+            "html": {
+                "void": "never",
+                "normal": "always",
+                "component": "always",
+            },
+        }],
+        "eol-last": ["error", "always"],
     }
-}
+};
