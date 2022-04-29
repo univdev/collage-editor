@@ -1,16 +1,7 @@
-<style lang="less" scoped>
-  .button {
-    .icon {
-      margin-right: 4px;
-    }
-  }
-</style>
-
 <template>
   <van-button
     v-bind="{ ...$attrs, ...$props }"
     class="button"
-    :color="color"
     @click="onClick"
   >
     <slot></slot>
@@ -24,7 +15,7 @@ export default defineComponent({
   name: 'AtomButton',
   props: {
     type: {
-      type: String as PropType<string>,
+      type: String as PropType<'button' | 'submit' | 'reset'>,
       required: false,
       default: null,
     },
