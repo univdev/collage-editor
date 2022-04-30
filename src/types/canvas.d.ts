@@ -1,26 +1,19 @@
-export declare type Image = {
-  frame?: string;
-  image?: string;
-  degree: number;
-  width?: number;
-  height?: number;
+export type Image = {
+  width: number;
+  height: number;
+  frame: string | HTMLImageElement,
+  content: string | HTMLImageElement,
+  degree: number,
 };
 
-export declare type Text = {
-  content?: string;
-  degree: number;
-  size?: number;
-  font?: string;
-  align?: 'center' | 'left' | 'right';
+export type Text = {
+  content: string,
+  size: number,
+  font: string,
 };
 
-export declare type Element = {
+export type Element = {
   position: [x: number, y: number];
-  type: 'image' | 'text';
+  type: 'image' | 'text',
   level: number,
-} & Image & Text;
-
-export declare enum Extension {
-  png = 'image/png',
-  jpg = 'image/jpg',
-};
+} | Image | Text;
