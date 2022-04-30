@@ -1,6 +1,10 @@
 <style lang="less" scoped>
   .collage-canvas {
     position: relative;
+    overflow: hidden;
+    .collage-image {
+      position: absolute;
+    }
     .canvas {
       position: relative;
       z-index: 2;
@@ -20,15 +24,34 @@
   <div
     class="collage-canvas"
     :style="{
-      width,
-      height
+      width: `${width}px`,
+      height: `${height}px`,
     }"
   >
+    <template
+      v-for="(item, key) in items"
+    >
+      <collage-image
+        v-if="item.type === 'image'"
+        class="collage-image"
+        :key="key"
+        :style="{ zIndex: item.level, left: `${item.position[0]}px`, top: `${item.position[1]}px` }"
+        :width="item.width"
+        :height="item.height"
+        :degree="item.degree"
+        :image="item.content"
+        :background="item.frame"
+        @click="onClickItem(item)"
+        @drag="onDrag($event, item, key)"
+        @drop="onDrop($event, drop, key)"
+      ></collage-image>
+    </template>
     <canvas
       ref="paint"
       class="canvas"
       :width="width"
       :height="height"
+      @click="onClickCanvas"
     ></canvas>
     <canvas
       ref="background"
@@ -41,9 +64,19 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
+import type { Element, Image as ImageType } from '@/types/canvas';
+import CollageImage from '@/components/molecules/CollageImage.vue';
 
 export default defineComponent({
+  components: {
+    CollageImage,
+  },
   props: {
+    items: {
+      type: Array as PropType<Element[]>,
+      required: false,
+      default: () => [],
+    },
     backgrounds: {
       type: Array as PropType<string[]>,
       required: false,
@@ -67,14 +100,20 @@ export default defineComponent({
     backgroundCanvas() {
       return this.$refs.background as HTMLCanvasElement;
     },
+    sortedItems(): Element[] {
+      return [...this.items].sort((a: any, b: any) => {
+        return a?.level > b?.level ? 1 : -1;
+      });
+    },
   },
   data() {
     return {
       backgroundImages: [] as HTMLImageElement[],
+      itemImages: [] as ImageType[],
     };
   },
   watch: {
-    backgroundImages(images) {
+    backgroundImages(images: HTMLImageElement[]) {
       this.renderBackgrounds(this.backgroundCanvas, images);
     },
   },
@@ -126,6 +165,19 @@ export default defineComponent({
     },
     loadImages(paths: string[]) {
       return Promise.all<HTMLImageElement>([...paths].map((path) => this.loadImage(path)));
+    },
+    onClickCanvas(e: any) {
+      const { layerX: x, layerY: y } = e;
+      console.log(x, y);
+    },
+    onClickItem(item: Element) {
+      this.$emit('click:item', item);
+    },
+    onDrag(event: DragEvent, item: Element, key: number) {
+      this.$emit('drag:image', event, item, key);
+    },
+    onDrop(event: DragEvent, item: Element, key: number) {
+      this.$emit('drop:image', event, item, key);
     },
     onGetBackgroundImages(backgrounds: string[]) {
       this.loadImages(backgrounds).then((images) => {
