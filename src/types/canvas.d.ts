@@ -12,6 +12,8 @@ export type Text = {
   content: string,
   size: number,
   font: string,
+  align: 'left' | 'center' | 'right',
+  color: string,
 };
 
 export type Element = {
