@@ -3,7 +3,9 @@ export type Image = {
   height: number;
   frame: string | HTMLImageElement,
   content: string | HTMLImageElement,
+  contentDegree: number,
   degree: number,
+  padding: number,
 };
 
 export type Text = {

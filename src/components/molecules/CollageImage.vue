@@ -8,6 +8,7 @@
     .collage-image__content {
       width: 100%;
       height: 100%;
+      object-fit: cover;
     }
   }
 </style>
@@ -20,6 +21,7 @@
       height: `${height}px`,
       backgroundImage: `url(${background})`,
       transform: `rotate(${degree}deg)`,
+      padding: `${padding}px`,
     }"
     @click="onClick"
     @drag.prevent.stop="onDrag"
@@ -28,6 +30,7 @@
     <img
       v-if="image"
       :src="image"
+      :style="{ transform: `rotate(${contentDegree}deg)` }"
       class="collage-image__content"
     >
   </div>
@@ -42,6 +45,11 @@ export default defineComponent({
       type: String as PropType<string>,
       required: false,
       default: null,
+    },
+    contentDegree: {
+      type: Number as PropType<number>,
+      required: false,
+      default: 0,
     },
     image: {
       type: String as PropType<string>,
@@ -60,6 +68,11 @@ export default defineComponent({
     },
     degree: {
       type: Number as PropType<number>,
+      required: false,
+      default: 0,
+    },
+    padding: {
+      type: Number,
       required: false,
       default: 0,
     },

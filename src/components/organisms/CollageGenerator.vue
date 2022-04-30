@@ -36,12 +36,14 @@
         class="collage-image"
         :key="key"
         :style="{ zIndex: item.level, left: `${item.position[0]}px`, top: `${item.position[1]}px` }"
+        :content-degree="item.contentDegree"
         :width="item.width"
         :height="item.height"
         :degree="item.degree"
         :image="item.content"
         :background="item.frame"
-        @click="onClickItem(item)"
+        :padding="item.padding"
+        @click="onClickItem(item, key)"
         @drag="onDrag($event, item, key)"
         @drop="onDrop($event, drop, key)"
       ></collage-image>
@@ -170,8 +172,8 @@ export default defineComponent({
       const { layerX: x, layerY: y } = e;
       console.log(x, y);
     },
-    onClickItem(item: Element) {
-      this.$emit('click:item', item);
+    onClickItem(item: Element, key: number) {
+      this.$emit('click:image', item, key);
     },
     onDrag(event: DragEvent, item: Element, key: number) {
       this.$emit('drag:image', event, item, key);
