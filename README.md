@@ -1,16 +1,18 @@
-# Vue 3 + TypeScript + Vite
+# 콜라주 에디터
+# 제작 진행도
+> 본 프로젝트는 미완성 프로젝트입니다
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## 미완성 사유
+### 경험 부족
+Canvas Selector, Multiline Text 등의 Canvas API 외적인 기능들을 개발해 본 경험이 전무하여 이 부분들을 해결하기 위해 생각하는 시간이 상당량 소요되었습니다.  
+그러다가 결국에는 이 부분들을 자동으로 처리해주는 ```Fabricjs``` 라이브러리를 알게 되었고, 이를 이용하여 요소들을 그리게 되었습니다.  
+다만, **이 결론에 도달하기 까지 걸린 소요시간이 너무 상당해서 최종적으로는 시간이 부족하게 되었습니다.**
+### 개발 노선 변경
+Canvas에 그려지는 요소를 선택하기 위하여 Canvas의 Event를 잡고, 마우스의 포지션을 기반으로 Canvas Element를 수정할 생각으로 작업을 진행하였으나, 이는 단순한 도형에서나 가능했던 일이였고, 일부 각도가 틀어지는 이미지 및 텍스트 등에서는 적용하기 매우 어렵다고 판단하여 실제 DOM에 요소들을 배치하고 이를 클릭하는 형태로 작업 노선을 변경하였습니다.
 
-## Recommended IDE Setup
+하지만 이렇게 작업하게 되면 추후에 다운로드를 받을 때는 어차피 각각의 요소들을 캔버스에 렌더링 해야하기 때문에 생산적이지 못하고, Multiline Text, Text Align 등의 문제를 해결할 수가 없어서 다시 Canvas 렌더링으로 돌아오게 되었습니다.
+### 비동기 렌더링
+폰트, 이미지 프레임, 컨텐츠 이미지 등 실제 존재하는 리소스들을 사용하기 위해서는 사용자가 이를 다운받아야만 합니다.  
+그렇기 때문에 ```FontfaceObserver```와 같은 라이브러리를 이용하여 에셋들이 불어와지는 순간에 캔버스에 그려지도록 구현했는데, 그러다보니 각각의 요소가 그려지는 시간을 핸들링하지 못해서 이미지의 zIndex를 제어하기 매우 어려웠습니다.
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
-
-## Type Support For `.vue` Imports in TS
-
-Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates. However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can enable Volar's Take Over mode by following these steps:
-
-1. Run `Extensions: Show Built-in Extensions` from VS Code's command palette, look for `TypeScript and JavaScript Language Features`, then right click and select `Disable (Workspace)`. By default, Take Over mode will enable itself if the default TypeScript extension is disabled.
-2. Reload the VS Code window by running `Developer: Reload Window` from the command palette.
-
-You can learn more about Take Over mode [here](https://github.com/johnsoncodehk/volar/discussions/471).
+그래서 이를 ```preloadImage```라는 메소드로 ```Promise```화 시켰고, Canvas ```mounted``` 타이밍에 ```Promise.all```을 사용하여 작업하였습니다.
