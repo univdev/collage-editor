@@ -45,7 +45,6 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { Element } from '@/types/canvas';
-import AtomInput from '@/components/atoms/Input.vue';
 import ControlsHeader from '@/components/organisms/ControlsHeader.vue';
 import CollageGenerator from '@/components/organisms/CollageGenerator.vue';
 import DownloadDialog from '@/components/molecules/DownloadDialog.vue';
@@ -55,7 +54,6 @@ type CollageEditorType = InstanceType<typeof CollageGenerator>;
 export default defineComponent({
   emits: ['download', 'upload:image'],
   components: {
-    AtomInput,
     ControlsHeader,
     CollageGenerator,
     DownloadDialog,

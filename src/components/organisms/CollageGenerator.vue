@@ -11,6 +11,13 @@
     :width="width"
     :height="height"
   ></canvas>
+  <input
+    accept="image/*"
+    type="file"
+    ref="uploader"
+    hidden
+    @change="onUploadImage"
+  />
 </template>
 
 <script lang="ts">
@@ -56,6 +63,7 @@ export default defineComponent({
     return {
       context: null as fabric.Canvas | null,
       objects: [] as any[],
+      selectedGroup: null as fabric.Group | null,
     };
   },
   watch: {
@@ -172,12 +180,42 @@ export default defineComponent({
     onSelectText(target: fabric.IText) {
       target.enterEditing();
     },
+    onSelectImage(target: fabric.Group) {
+      this.selectedGroup = target;
+      this.onVisibleUploader();
+    },
+    onVisibleUploader() {
+      const uploader: HTMLInputElement = this.$refs.uploader as HTMLInputElement;
+      uploader.click();
+    },
+    onUploadImage(e: InputEvent) {
+      const target: HTMLInputElement = e.target as HTMLInputElement;
+      const files: FileList = target.files as FileList;
+      const file: File = files[0];
+      if (!file) return;
+      const url = URL.createObjectURL(file);
+      this.preloadImage(url).then((image) => {
+        const [frame, content] = this.selectedGroup?.getObjects() as fabric.Image[];
+        content.clone((clone: fabric.Image) => {
+          clone.setSrc(image.getSrc());
+          image.scaleToWidth(172);
+          image.scaleToHeight(216);
+          image.width = 1000;
+          image.height = 1500;
+          this.selectedGroup?.add(clone);
+          this.selectedGroup?.remove(content);
+          this.context?.requestRenderAll();
+        });
+      });
+      target.value = '';
+    },
   },
   mounted() {
     this.initialize().then(() => {
       this.renderObjects(this.sortedItems).then(() => {
         this.context?.on('mouse:dblclick', ({ target }) => {
           if (target?.type === 'i-text') this.onSelectText(target as fabric.IText);
+          if (target?.type === 'group') this.onSelectImage(target as fabric.Group);
         });
       });
     });
