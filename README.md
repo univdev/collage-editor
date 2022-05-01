@@ -1,16 +1,28 @@
-# Vue 3 + TypeScript + Vite
-
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
-
-## Recommended IDE Setup
-
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
-
-## Type Support For `.vue` Imports in TS
-
-Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates. However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can enable Volar's Take Over mode by following these steps:
-
-1. Run `Extensions: Show Built-in Extensions` from VS Code's command palette, look for `TypeScript and JavaScript Language Features`, then right click and select `Disable (Workspace)`. By default, Take Over mode will enable itself if the default TypeScript extension is disabled.
-2. Reload the VS Code window by running `Developer: Reload Window` from the command palette.
-
-You can learn more about Take Over mode [here](https://github.com/johnsoncodehk/volar/discussions/471).
+# 🖼 콜라주 에디터
+## 개요
+본 프로젝트는 사용자의 이미지를 🌟 **좀 더 예쁘게** 나타낼 수 있도록 콜라주를 제작해주는 에디터입니다.  
+Vue3 + Typescript + HTML5 Canvas로 제작 되었습니다.
+## 실행 방법
+**yarn (추천!)**
+```
+yarn
+yarn dev
+```
+**npm**
+```
+npm i
+npm run dev
+```
+## 사용 방법
+### 텍스트 편집
+- 텍스트를 한 번 클릭
+  - 가운데 원을 눌러 마우스를 이동하면 회전이 가능합니다.
+  - 가운데 원을 제외한 아무 영역이나 누르고 마우스를 이동하면 텍스트 위치 이동이 가능합니다.
+- 텍스트를 두 번 클릭
+  - 텍스트 편집모드에 진입하여 텍스트를 편집할 수 있습니다.
+### 이미지 편집
+- 이미지는 최대 두 개까지 업로드가 가능합니다.
+- 이미지가 업로드 되는 영역을 클릭하면 이미지 업로더가 열리고, 이미지를 업로드하면 해당 영역에 이미지가 삽입됩니다.
+- 이미지 영역에 파일을 드래그, 드롭하면 마찬가지로 해당 영역에 이미지가 삽입 됩니다.
+### 다운로드
+- 편집으로 탄생한 이미지를 다운로드 받을 수 있습니다. (JPG, PNG)

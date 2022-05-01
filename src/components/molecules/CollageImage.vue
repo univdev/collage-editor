@@ -5,10 +5,12 @@
     justify-content: center;
     background-size: cover;
     padding: 16px;
+    user-select: none;
     .collage-image__content {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      user-select: none;
+      background-size: cover;
     }
   }
 </style>
@@ -23,16 +25,15 @@
       transform: `rotate(${degree}deg)`,
       padding: `${padding}px`,
     }"
-    @click="onClick"
+    @dblclick="onClick"
     @drag.prevent.stop="onDrag"
     @drop.prevent.stop="onDrop"
   >
-    <img
+    <div
       v-if="image"
-      :src="image"
-      :style="{ transform: `rotate(${contentDegree}deg)` }"
+      :style="{ transform: `rotate(${contentDegree}deg)`, backgroundImage: `url(${image})` }"
       class="collage-image__content"
-    >
+    />
   </div>
 </template>
 
@@ -40,6 +41,7 @@
 import { defineComponent, PropType } from 'vue';
 
 export default defineComponent({
+  emits: ['click', 'drag', 'drop'],
   props: {
     background: {
       type: String as PropType<string>,

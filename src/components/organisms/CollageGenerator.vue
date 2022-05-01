@@ -2,9 +2,6 @@
   .collage-canvas {
     position: relative;
     overflow: hidden;
-    .collage-image {
-      position: absolute;
-    }
     .canvas {
       position: relative;
       z-index: 2;
@@ -30,23 +27,40 @@
   >
     <template
       v-for="(item, key) in items"
+      :key="key"
     >
-      <collage-image
-        v-if="item.type === 'image'"
-        class="collage-image"
-        :key="key"
-        :style="{ zIndex: item.level, left: `${item.position[0]}px`, top: `${item.position[1]}px` }"
-        :content-degree="item.contentDegree"
-        :width="item.width"
-        :height="item.height"
-        :degree="item.degree"
-        :image="item.content"
-        :background="item.frame"
-        :padding="item.padding"
-        @click="onClickItem(item, key)"
-        @drag="onDrag($event, item, key)"
-        @drop="onDrop($event, drop, key)"
-      ></collage-image>
+      <movable-controller
+        :level="item.level"
+        :x="item.position ? item.position[0] : 0"
+        :y="item.position ? item.position[1] : 0"
+        @move="onMoveItem($event, item, key)"
+      >
+        <collage-image
+          v-if="item.type === 'image'"
+          class="collage-image"
+          :style="{ zIndex: item.level, left: `${item.position[0]}px`, top: `${item.position[1]}px` }"
+          :content-degree="item.contentDegree"
+          :width="item.width"
+          :height="item.height"
+          :degree="item.degree"
+          :image="item.content"
+          :background="item.frame"
+          :padding="item.padding"
+          @click="onClickItem(item, key)"
+          @drag="onDrag($event, item, key)"
+          @drop="onDrop($event, drop, key)"
+        ></collage-image>
+        <collage-text
+          v-if="item.type === 'text'"
+          class="collage-text"
+          :value="item.content"
+          :align="item.align"
+          :size="item.size"
+          :color="item.color"
+          :font="item.font"
+          @input="onInputText($event, item, key)"
+        ></collage-text>
+      </movable-controller>
     </template>
     <canvas
       ref="paint"
@@ -68,11 +82,16 @@
 import { defineComponent, PropType } from 'vue';
 import type { Element, Image as ImageType } from '@/types/canvas';
 import CollageImage from '@/components/molecules/CollageImage.vue';
+import CollageText from '@/components/molecules/CollageText.vue';
+import MovableController from '@/components/molecules/MovableController.vue';
 
 export default defineComponent({
   components: {
     CollageImage,
+    CollageText,
+    MovableController,
   },
+  emits: ['click:image', 'drop:image', 'drag:image', 'input:text', 'move:item'],
   props: {
     items: {
       type: Array as PropType<Element[]>,
@@ -168,10 +187,6 @@ export default defineComponent({
     loadImages(paths: string[]) {
       return Promise.all<HTMLImageElement>([...paths].map((path) => this.loadImage(path)));
     },
-    onClickCanvas(e: any) {
-      const { layerX: x, layerY: y } = e;
-      console.log(x, y);
-    },
     onClickItem(item: Element, key: number) {
       this.$emit('click:image', item, key);
     },
@@ -185,6 +200,12 @@ export default defineComponent({
       this.loadImages(backgrounds).then((images) => {
         this.backgroundImages = images;
       });
+    },
+    onInputText(text: string, item: Element, key: number) {
+      this.$emit('input:text', text, item, key);
+    },
+    onMoveItem(position: [number, number], item: Element, key: number) {
+      this.$emit('move:item', position, item, key);
     },
   },
   mounted() {

@@ -1,4 +1,10 @@
 <style lang="less" scoped>
+  .input {
+    user-select: none;
+    &.input--active {
+      user-select: text;
+    }
+  }
 </style>
 
 <template>
@@ -6,9 +12,12 @@
     ref="input"
     v-bind="{ ...$attrs, ...$props }"
     v-html="value"
-    class="input"
+    :class="{
+      input: true,
+      'input--active': isEditable,
+    }"
     :contenteditable="isEditable"
-    @click="onClick"
+    @dblclick="onClick"
     @blur="onBlur"
     @input="onInput"
   >
@@ -34,7 +43,7 @@ export default {
   watch: {
     isEditable(flag) {
       const input: HTMLElement = this.$refs.input as HTMLElement;
-      if (flag) input.focus();
+      if (flag) input.select();
     },
   },
   methods: {
