@@ -54,7 +54,7 @@ export default defineComponent({
             font: 'Amiri',
             level: 1,
             align: 'center',
-            color: '#FA0000',
+            color: '#555151',
           },
           {
             position: [width / 2, 120],
@@ -64,7 +64,7 @@ export default defineComponent({
             font: 'Amiri',
             level: 1,
             align: 'center',
-            color: '#FA0000',
+            color: '#555151',
           },
           {
             position: [0, height - imageHeight - 100],
