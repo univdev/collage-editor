@@ -4,7 +4,11 @@
 
 <template>
   <div class="app">
+    <loading-overlay
+      :visible="isLoading"
+    ></loading-overlay>
     <collage-editor
+      v-if="!isLoading"
       :items="canvas.elements"
       :canvas-width="canvas.width"
       :canvas-height="canvas.height"
@@ -20,17 +24,20 @@ import { Element } from '@/types/canvas';
 import CollageEditor from '@/components/templates/CollageEditor.vue';
 import BackgroundImage from '@/assets/images/background.png';
 import ShadowImage from '@/assets/images/shadow.png';
+import LoadingOverlay from '@/components/molecules/LoadingOverlay.vue';
 import LeftFrameImage from '@/assets/images/image-area--left.png';
 import RightFrameImage from '@/assets/images/image-area--right.png';
 
 export default defineComponent({
   components: {
     CollageEditor,
+    LoadingOverlay,
   },
   data() {
     const [width, height] = [335, 596];
-    const [imageWidth, imageHeight] = [200, 260];
+    const [imageWidth, imageHeight] = [200, 240];
     return {
+      isLoading: false,
       canvas: {
         width,
         height,
@@ -38,25 +45,46 @@ export default defineComponent({
           BackgroundImage,
           ShadowImage,
         ] as string[],
-        elements: [{
-          position: [0, height - (imageHeight * 1.2)],
-          type: 'image',
-          frame: LeftFrameImage,
-          level: 4,
-          width: imageWidth,
-          height: imageHeight,
-        },
-        {
-          position: [
-            width - imageWidth,
-            height - imageHeight + (imageHeight / 8),
-          ],
-          type: 'image',
-          frame: RightFrameImage,
-          level: 3,
-          width: imageWidth,
-          height: imageHeight,
-        }] as Element[],
+        elements: [
+          {
+            position: [width / 2, 80],
+            type: 'text',
+            content: '2020',
+            size: 24,
+            font: 'Amiri',
+            level: 1,
+            align: 'center',
+            color: '#FA0000',
+          },
+          {
+            position: [width / 2, 120],
+            type: 'text',
+            content: 'SUMMER',
+            size: 48,
+            font: 'Amiri',
+            level: 1,
+            align: 'center',
+            color: '#FA0000',
+          },
+          {
+            position: [0, height - imageHeight - 100],
+            type: 'image',
+            frame: LeftFrameImage,
+            content: BackgroundImage,
+            width: imageWidth,
+            height: imageHeight,
+            contentDegree: 10,
+          },
+          {
+            position: [width - imageWidth, height - imageHeight],
+            type: 'image',
+            frame: RightFrameImage,
+            content: BackgroundImage,
+            width: imageWidth,
+            height: imageHeight,
+            contentDegree: -5,
+          },
+        ] as Element[],
       },
     };
   },

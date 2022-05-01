@@ -9,6 +9,8 @@
   },
   "dependencies": {
     "@types/node": "^17.0.27",
+    "fabric": "^5.2.1",
+    "fontfaceobserver": "^2.1.0",
     "less": "^4.1.2",
     "less-loader": "^10.2.0",
     "path": "^0.12.7",
@@ -17,6 +19,8 @@
     "vue": "^3.2.25"
   },
   "devDependencies": {
+    "@types/fabric": "^4.5.7",
+    "@types/fontfaceobserver": "^2.1.0",
     "@typescript-eslint/eslint-plugin": "^5.21.0",
     "@typescript-eslint/parser": "^5.21.0",
     "@vitejs/plugin-vue": "^2.3.1",

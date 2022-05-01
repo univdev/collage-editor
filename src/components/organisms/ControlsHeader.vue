@@ -30,6 +30,7 @@ import AtomButton from '@/components/atoms/Button.vue';
 import HeaderBar from '@/components/molecules/HeaderBar.vue';
 
 export default defineComponent({
+  emits: ['download'],
   components: {
     AtomButton,
     HeaderBar,

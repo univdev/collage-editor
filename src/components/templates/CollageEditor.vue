@@ -52,6 +52,7 @@ import CollageGenerator from '@/components/organisms/CollageGenerator.vue';
 type CollageEditorType = InstanceType<typeof CollageGenerator>;
 
 export default defineComponent({
+  emits: ['download', 'upload:image'],
   components: {
     AtomInput,
     ControlsHeader,
@@ -90,22 +91,13 @@ export default defineComponent({
     };
   },
   methods: {
-    onClickImage(item: Element, key: number) {
-      const uploader: HTMLInputElement = this.$refs.uploader as HTMLInputElement;
-      uploader.click();
-      this.selectedItem = key;
-      this.$emit('click:image', item, key);
-    },
     onDownload() {
-      const creator: CollageEditorType = this.creator;
-      const canvas: HTMLCanvasElement = creator.getMergedCanvas();
-      this.$emit('download', canvas);
-    },
-    onDrag(event: DragEvent, item: Element, key: number) {
-      this.$emit('drag:image', event, item, key);
-    },
-    onDrop(event: DragEvent, item: Element, key: number) {
-      this.$emit('drop:image', event, item, key);
+      const { creator } = this;
+      const canvas = creator.context;
+      const link = canvas?.toDataURL({
+        format: 'png',
+      });
+      this.$emit('download', link);
     },
     onUploadImage(event: InputEvent) {
       const target: HTMLInputElement = event.target as HTMLInputElement;

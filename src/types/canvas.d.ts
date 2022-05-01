@@ -1,4 +1,7 @@
 export type Image = {
+  position: [x: number, y: number];
+  type: 'image' | 'text',
+  level: number,
   width: number;
   height: number;
   frame: string | HTMLImageElement,
@@ -9,6 +12,9 @@ export type Image = {
 };
 
 export type Text = {
+  position: [x: number, y: number];
+  type: 'image' | 'text',
+  level: number,
   content: string,
   size: number,
   font: string,
@@ -17,7 +23,5 @@ export type Text = {
 };
 
 export type Element = {
-  position: [x: number, y: number];
   type: 'image' | 'text',
-  level: number,
-} | Image | Text;
+} & Image | Text;
