@@ -98,56 +98,65 @@ export default defineComponent({
       });
     },
     renderObjects(items: CanvasElement[]) {
-      const result = [];
+      const result = [] as any[];
       for (const item of items) {
         if (item.type === 'image') result.push(this.renderImage(item as Image));
         if (item.type === 'text') result.push(this.renderText(item as Text));
       }
-      return result;
-    },
-    renderImage(item: Image) {
-      const { width, height, position, frame, content, contentDegree } = item;
-      const [x, y] = position;
-      const resources: string[] = [];
-      if (frame) resources.push(frame as string);
-      if (content) resources.push(content as string);
-      return this.preloadImages(resources).then(([f, img]) => {
-        const elements = [];
-        f.scaleToWidth(width);
-        f.scaleToWidth(height);
-        f.left = x;
-        f.top = y;
-        elements.push(f);
-        if (img) {
-          img.scaleToWidth(172);
-          img.scaleToHeight(216);
-          img.left = x + 40;
-          img.top = y + 40;
-          img.rotate(contentDegree);
-          elements.push(img);
-        }
-        const group = new fabric.Group(elements);
-        group.on('mouse:dblclick', (e) => {
-          window.alert(333);
-        })
-        this.context?.add(group);
+      return Promise.all(result).then((items: any) => {
+        this.context?.add(...items);
       });
     },
-    renderText(item: Text) {
-      const font = new FontFaceObserver(item.font);
-      font.load().then(() => {
-        const [x, y] = item.position;
-        const text = new fabric.IText(item.content, {
-          fontFamily: item.font,
-          left: x,
-          top: y,
-          fontSize: item.size,
-          textAlign: item.align,
-          fill: item.color,
-          originX: 'center',
-          centeredScaling: true,
+    renderImage(item: Image): Promise<fabric.Group> {
+      return new Promise((resolve, reject) => {
+        const { width, height, position, frame, content, contentDegree } = item;
+        const [x, y] = position;
+        const resources: string[] = [];
+        if (frame) resources.push(frame as string);
+        if (content) resources.push(content as string);
+        return this.preloadImages(resources).then(([f, img]) => {
+          const elements = [];
+          f.scaleToWidth(width);
+          f.scaleToWidth(height);
+          f.left = x;
+          f.top = y;
+          elements.push(f);
+          if (img) {
+            img.scaleToWidth(172);
+            img.scaleToHeight(216);
+            img.left = x + 40;
+            img.top = y + 40;
+            img.rotate(contentDegree);
+            elements.push(img);
+          }
+          const group = new fabric.Group(elements);
+          group.selectable = true;
+          group.on('mouse:dblclick', (e) => {
+            console.log(e);
+          });
+          resolve(group);
         });
-        this.context?.add(text);
+      });
+    },
+    renderText(item: Text): Promise<fabric.IText> {
+      const font = new FontFaceObserver(item.font);
+      return new Promise((resolve) => {
+        font.load().then(() => {
+          const [x, y] = item.position;
+          const text = new fabric.IText(item.content);
+          text.set({
+            fontFamily: item.font,
+            left: x,
+            top: y,
+            fontSize: item.size,
+            textAlign: item.align,
+            fill: item.color,
+            originX: 'center',
+            centeredScaling: true,
+            editable: true,
+          });
+          resolve(text);
+        });
       });
     },
     preloadImage(path: string): Promise<fabric.Image> {
@@ -165,8 +174,9 @@ export default defineComponent({
     },
   },
   mounted() {
-    this.initialize();
-    this.renderObjects(this.sortedItems);
+    this.initialize().then(() => {
+      this.renderObjects(this.sortedItems);
+    });
   },
 });
 </script>

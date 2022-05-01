@@ -27,6 +27,8 @@ import ShadowImage from '@/assets/images/shadow.png';
 import LoadingOverlay from '@/components/molecules/LoadingOverlay.vue';
 import LeftFrameImage from '@/assets/images/image-area--left.png';
 import RightFrameImage from '@/assets/images/image-area--right.png';
+import Example01 from '@/assets/images/example01.jpg';
+import Example02 from '@/assets/images/example02.jpg';
 
 export default defineComponent({
   components: {
@@ -70,7 +72,7 @@ export default defineComponent({
             position: [0, height - imageHeight - 100],
             type: 'image',
             frame: LeftFrameImage,
-            content: BackgroundImage,
+            content: Example01,
             width: imageWidth,
             height: imageHeight,
             contentDegree: 10,
@@ -79,7 +81,7 @@ export default defineComponent({
             position: [width - imageWidth, height - imageHeight],
             type: 'image',
             frame: RightFrameImage,
-            content: BackgroundImage,
+            content: Example02,
             width: imageWidth,
             height: imageHeight,
             contentDegree: -5,

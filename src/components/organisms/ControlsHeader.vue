@@ -1,20 +1,34 @@
 <style lang="less" scoped>
-  .header-bar {
-    width: 100%;
-    height: 60px;
-    padding: 0 16px;
+  .header {
     display: flex;
     align-items: center;
-    border-bottom: 1px solid #EEE;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
+  }
+  .dropdown-menu {
+    /deep/ .van-dropdown-menu__bar {
+      padding: 0 16px;
+    }
+  }
+  .download-buton {
+    margin-left: 16px;
   }
 </style>
 
 <template>
-    <header-bar>
+    <header-bar
+      class="header"
+    >
+      <van-dropdown-menu
+        class="dropdown-menu"
+      >
+        <van-dropdown-item
+          class="dropdown-menu__item"
+          v-model="downloadOption"
+          :options="downloadOptions"
+        />
+      </van-dropdown-menu>
       <atom-button
+        class="download-buton"
         type="success"
         icon="printer"
         @click="onClickDownloadButton"
@@ -42,9 +56,18 @@ export default defineComponent({
       default: '다운로드',
     },
   },
+  data() {
+    return {
+      downloadOption: 'png',
+      downloadOptions: [
+        { text: 'PNG', value: 'png' },
+        { text: 'JPG', value: 'jpg' },
+      ],
+    };
+  },
   methods: {
     onClickDownloadButton(e: MouseEvent) {
-      this.$emit('download', e);
+      this.$emit('download', e, this.downloadOption);
     },
   },
 });

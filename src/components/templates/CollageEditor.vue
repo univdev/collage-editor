@@ -6,7 +6,7 @@
       display: flex;
       justify-content: center;
       padding: 16px;
-      .collage-creator {
+      .collage-generator {
         display: inline-block;
         margin: auto;
       }
@@ -21,8 +21,8 @@
     />
     <div class="content">
       <collage-generator
-        ref="creator"
-        class="collage-creator"
+        ref="generator"
+        class="collage-generator"
         :items="items"
         :width="canvasWidth"
         :height="canvasHeight"
@@ -48,6 +48,7 @@ import { Element } from '@/types/canvas';
 import AtomInput from '@/components/atoms/Input.vue';
 import ControlsHeader from '@/components/organisms/ControlsHeader.vue';
 import CollageGenerator from '@/components/organisms/CollageGenerator.vue';
+import DownloadDialog from '@/components/molecules/DownloadDialog.vue';
 
 type CollageEditorType = InstanceType<typeof CollageGenerator>;
 
@@ -57,6 +58,7 @@ export default defineComponent({
     AtomInput,
     ControlsHeader,
     CollageGenerator,
+    DownloadDialog,
   },
   props: {
     items: {
@@ -81,23 +83,29 @@ export default defineComponent({
     },
   },
   computed: {
-    creator(): CollageEditorType {
-      return this.$refs.creator as CollageEditorType;
+    generator(): CollageEditorType {
+      return this.$refs.generator as CollageEditorType;
     },
   },
   data() {
     return {
+      isVisibleDownloadDialog: false,
       selectedItem: null as (number | null),
     };
   },
   methods: {
-    onDownload() {
-      const { creator } = this;
-      const canvas = creator.context;
-      const link = canvas?.toDataURL({
-        format: 'png',
-      });
-      this.$emit('download', link);
+    onDownload(e: Event, extension: string) {
+      console.log(extension);
+      const { generator } = this;
+      const canvas = generator.context;
+      const url = canvas?.toDataURL({
+        format: extension,
+      }) as string;
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = ['2020_summer', extension].join('.');
+      link.click();
+      link.remove();
     },
     onUploadImage(event: InputEvent) {
       const target: HTMLInputElement = event.target as HTMLInputElement;

@@ -13,6 +13,7 @@ import { defineComponent, PropType } from 'vue';
 
 export default defineComponent({
   name: 'AtomButton',
+  emits: ['click'],
   props: {
     type: {
       type: String as PropType<'button' | 'submit' | 'reset'>,

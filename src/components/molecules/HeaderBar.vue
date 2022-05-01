@@ -7,8 +7,6 @@
     align-items: center;
     border-bottom: 1px solid #EEE;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
   }
 </style>
 
