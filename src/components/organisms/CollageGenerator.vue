@@ -131,9 +131,6 @@ export default defineComponent({
           }
           const group = new fabric.Group(elements);
           group.selectable = true;
-          group.on('mouse:dblclick', (e) => {
-            console.log(e);
-          });
           resolve(group);
         });
       });
@@ -172,10 +169,17 @@ export default defineComponent({
     getGroup(objects: fabric.Object[], options?: fabric.IGroupOptions, isAlreadyGrouped?: boolean) {
       return new fabric.Group(objects, options, isAlreadyGrouped);
     },
+    onSelectText(target: fabric.IText) {
+      target.enterEditing();
+    },
   },
   mounted() {
     this.initialize().then(() => {
-      this.renderObjects(this.sortedItems);
+      this.renderObjects(this.sortedItems).then(() => {
+        this.context?.on('mouse:dblclick', ({ target }) => {
+          if (target?.type === 'i-text') this.onSelectText(target as fabric.IText);
+        });
+      });
     });
   },
 });
