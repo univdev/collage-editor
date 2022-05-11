@@ -93,7 +93,6 @@ export default defineComponent({
   },
   methods: {
     onDownload(e: Event, extension: string) {
-      console.log(extension);
       const { generator } = this;
       const canvas = generator.context;
       const url = canvas?.toDataURL({
